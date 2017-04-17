@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function ace_special_events_install() {
+  // This may not be the best approach for running ace_special_events_update_7001()
+  drupal_set_installed_schema_version('ace_special_events', '7000');
+  $roles = array(
+    'Content Manager' => array(
+      'create event_csv_importer content',
+      'edit own event_csv_importer content',
+      'edit any event_csv_importer content',
+      'delete own event_csv_importer content',
+      'delete any event_csv_importer content'
+    ),
+    'Site Manager' => array(
+      'create event_csv_importer content',
+      'edit own event_csv_importer content',
+      'edit any event_csv_importer content',
+      'delete own event_csv_importer content',
+      'delete any event_csv_importer content'
+    ),
+  );
+  module_load_include('inc', 'acme', 'acme.perm');
+  acme_set_permissions($roles);
+}
+
+function ace_special_events_update_7001() {
+  // Parent Terms
+  $vocab = 'event_type';
+  $parents = array(
+    'Special-Events'
+  );
+  $vocabulary = taxonomy_vocabulary_machine_name_load($vocab);
+  foreach ($parents as $name) {
+    $existing = taxonomy_get_term_by_name($name, $vocabulary->machine_name);
+    if (empty($existing)) {
+      $term = new stdClass();
+      $term->name = $name;
+      $term->parent = 0;
+      $term->vid = $vocabulary->vid;
+      taxonomy_term_save($term);
+    }
+  }
+}

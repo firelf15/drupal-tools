@@ -1,0 +1,8 @@
+name = Feeds Tamper Get Variable
+description = "Feed Importer Tamper Plugin to set a value from a site variable."
+package = Custom
+
+dependencies[] = feeds_tamper
+
+version = "7.x-1.0"
+core = 7.x
